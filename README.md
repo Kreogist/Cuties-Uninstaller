@@ -1,0 +1,4 @@
+Cuties-Uninstaller
+==================
+
+Cuties' uninstaller.
