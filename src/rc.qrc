@@ -1,0 +1,17 @@
+<RCC>
+    <qresource prefix="/MsgBox">
+        <file>image/MessageBox/Bottom.png</file>
+        <file>image/MessageBox/DownBound.png</file>
+        <file>image/MessageBox/Title.png</file>
+        <file>image/MessageBox/UpBound.png</file>
+    </qresource>
+    <qresource prefix="/Buttons">
+        <file>image/Buttons/ok_hover.png</file>
+        <file>image/Buttons/ok_normal.png</file>
+        <file>image/Buttons/cancel_hover.png</file>
+        <file>image/Buttons/cancel_normal.png</file>
+    </qresource>
+    <qresource prefix="/sounds">
+        <file>sounds/alert.wav</file>
+    </qresource>
+</RCC>

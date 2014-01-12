@@ -1,4 +1,3 @@
-Cuties-Uninstaller
+Cuties Uninstaller
 ==================
-
-Cuties' uninstaller.
+Cuties Uninstaller is a application to uninstall Cuties for Windows Platform.
