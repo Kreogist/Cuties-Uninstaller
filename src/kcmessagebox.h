@@ -68,6 +68,8 @@ class KCMessageBoxPanel : public QLabel
 public:
     explicit KCMessageBoxPanel(QWidget *parent = 0);
     void enabledCancel();
+    void disabledOK();
+    void enabledOK();
     enum buttonState
     {
         none = 0,
@@ -131,8 +133,15 @@ public:
     void addSpacing(int value);
     void addWidget(QWidget *widget);
     void enabledCancel();
+    void disabledOK();
+    void enabledOK();
 
     KCMessageBoxPanel::buttonState messageBoxState();
+    bool getSoundEffect() const;
+    void setSoundEffect(bool value);
+
+    bool getEscEnabled() const;
+    void setEscEnabled(bool value);
 
 signals:
 
@@ -159,6 +168,8 @@ private:
     KCMessageBoxContext *context;
 
     QRect beginState, heightExState, finalState;
+    bool soundEffect=true;
+    bool escEnabled=true;
 };
 
 #endif // KCMESSAGEBOX_H

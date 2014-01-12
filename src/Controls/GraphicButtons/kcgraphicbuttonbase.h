@@ -28,12 +28,7 @@ class KCGraphicButtonBase : public QWidget
     Q_OBJECT
 public:
     explicit KCGraphicButtonBase(QWidget *parent = 0);
-    QPixmap getNormalGraphic() const;
-    QPixmap getHoverGraphic() const;
-    QPixmap getPressedGraphic() const;
-    void setNormalGraphic(const QPixmap &value);
-    void setHoverGraphic(const QPixmap &value);
-    void setPressedGraphic(const QPixmap &value);
+    void visibleDisabled();
 
 signals:
     void pressed();
@@ -42,14 +37,21 @@ signals:
 public slots:
 
 protected:
+    QPixmap getNormalGraphic() const;
+    QPixmap getHoverGraphic() const;
+    QPixmap getPressedGraphic() const;
+    void setNormalGraphic(const QPixmap &value);
+    void setHoverGraphic(const QPixmap &value);
+    void setPressedGraphic(const QPixmap &value);
     void enterEvent(QEvent *e);
     void leaveEvent(QEvent *e);
     void mousePressEvent(QMouseEvent *e);
     void mouseReleaseEvent(QMouseEvent *e);
+    QLabel *buttonGraphic;
 
 private:
-    QLabel *buttonGraphic;
     QPixmap normalGraphic, hoverGraphic, pressedGraphic;
+    bool enabled=true;
 };
 
 #endif // KCGRAPHICBUTTONBASE_H

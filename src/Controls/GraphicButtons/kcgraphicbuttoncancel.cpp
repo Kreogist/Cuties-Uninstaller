@@ -22,6 +22,7 @@
 KCGraphicButtonCancel::KCGraphicButtonCancel(QWidget *parent) :
     KCGraphicButtonBase(parent)
 {
+    setFixedSize(32,32);
     setNormalGraphic(QPixmap(":/Buttons/image/Buttons/cancel_normal.png"));
     setHoverGraphic(QPixmap(":/Buttons/image/Buttons/cancel_hover.png"));
     setPressedGraphic(QPixmap(":/Buttons/image/Buttons/cancel_normal.png"));

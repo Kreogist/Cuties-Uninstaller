@@ -17,14 +17,14 @@
  *  along with Kreogist-Cuties.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <QEvent>
+#include <QMouseEvent>
 #include <QHBoxLayout>
 #include "kcgraphicbuttonbase.h"
 
 KCGraphicButtonBase::KCGraphicButtonBase(QWidget *parent) :
     QWidget(parent)
 {
-    setFixedSize(32,32);
-
     QHBoxLayout *buttonLayout=new QHBoxLayout(this);
     buttonLayout->setContentsMargins(0,0,0,0);
     buttonLayout->setSpacing(0);
@@ -36,20 +36,42 @@ KCGraphicButtonBase::KCGraphicButtonBase(QWidget *parent) :
     buttonLayout->addWidget(buttonGraphic);
 }
 
+void KCGraphicButtonBase::visibleDisabled()
+{
+    setEnabled(false);
+    enabled=false;
+    buttonGraphic->setVisible(false);
+}
+
 void KCGraphicButtonBase::enterEvent(QEvent *e)
 {
+    if(!enabled)
+    {
+        e->ignore();
+        return;
+    }
     buttonGraphic->setPixmap(hoverGraphic);
     QWidget::enterEvent(e);
 }
 
 void KCGraphicButtonBase::leaveEvent(QEvent *e)
 {
+    if(!enabled)
+    {
+        e->ignore();
+        return;
+    }
     buttonGraphic->setPixmap(normalGraphic);
     QWidget::leaveEvent(e);
 }
 
 void KCGraphicButtonBase::mousePressEvent(QMouseEvent *e)
 {
+    if(!enabled)
+    {
+        e->ignore();
+        return;
+    }
     buttonGraphic->setPixmap(pressedGraphic);
     QWidget::mousePressEvent(e);
     emit pressed();
@@ -57,6 +79,11 @@ void KCGraphicButtonBase::mousePressEvent(QMouseEvent *e)
 
 void KCGraphicButtonBase::mouseReleaseEvent(QMouseEvent *e)
 {
+    if(!enabled)
+    {
+        e->ignore();
+        return;
+    }
     buttonGraphic->setPixmap(hoverGraphic);
     QWidget::mouseReleaseEvent(e);
     emit clicked();

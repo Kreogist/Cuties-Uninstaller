@@ -156,6 +156,18 @@ void KCMessageBoxPanel::enabledCancel()
     cancelButton->show();
 }
 
+void KCMessageBoxPanel::disabledOK()
+{
+    okButton->setVisible(false);
+    okButton->setEnabled(false);
+}
+
+void KCMessageBoxPanel::enabledOK()
+{
+    okButton->setVisible(true);
+    okButton->setEnabled(true);
+}
+
 void KCMessageBoxPanel::sendSignals(int buttonIndex)
 {
     switch(buttonIndex)
@@ -216,7 +228,7 @@ void KCMessageBoxContext::addWidget(QWidget *widget)
     {
         heightSizeHint=cacheHint;
     }
-    cacheHint=widget->sizeHint().width()+40;
+    cacheHint=widget->width()+40;
     if(widthSizeHint < cacheHint)
     {
         widthSizeHint = cacheHint;
@@ -368,6 +380,16 @@ void KCMessageBox::enabledCancel()
     panel->enabledCancel();
 }
 
+void KCMessageBox::disabledOK()
+{
+    panel->disabledOK();
+}
+
+void KCMessageBox::enabledOK()
+{
+    panel->enabledOK();
+}
+
 KCMessageBoxPanel::buttonState KCMessageBox::messageBoxState()
 {
     return messageState;
@@ -421,7 +443,10 @@ void KCMessageBox::showEvent(QShowEvent *e)
     showAnimation->addAnimation(heightExpand);
 
     setGeometry(beginState);
-    QSound::play(":/sounds/sounds/alert.wav");
+    if(soundEffect)
+    {
+        QSound::play(":/sounds/sounds/alert.wav");
+    }
     showAnimation->start();
     QWidget::showEvent(e);
 }
@@ -434,11 +459,13 @@ void KCMessageBox::keyPressEvent(QKeyEvent *e)
     case Qt::Key_Return:
         messageFilter(KCMessageBoxPanel::buttonOK);
         animateClose();
-        break;
+        return;
     case Qt::Key_Escape:
-        messageFilter(KCMessageBoxPanel::buttonCancel);
-        animateClose();
-        break;
+        if(escEnabled){
+            messageFilter(KCMessageBoxPanel::buttonCancel);
+            animateClose();
+        }
+        return;
     default:
         QDialog::keyPressEvent(e);
         break;
@@ -466,3 +493,24 @@ void KCMessageBox::animateClose()
     exitAnimation->setEndValue(endGeometry);
     exitAnimation->start();
 }
+
+bool KCMessageBox::getEscEnabled() const
+{
+    return escEnabled;
+}
+
+void KCMessageBox::setEscEnabled(bool value)
+{
+    escEnabled = value;
+}
+
+bool KCMessageBox::getSoundEffect() const
+{
+    return soundEffect;
+}
+
+void KCMessageBox::setSoundEffect(bool value)
+{
+    soundEffect = value;
+}
+

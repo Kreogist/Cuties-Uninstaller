@@ -13,14 +13,20 @@ SOURCES += \
     Controls/GraphicButtons/kcgraphicbuttonok.cpp \
     Controls/GraphicButtons/kcgraphicbuttoncancel.cpp \
     mainwindow.cpp \
-    kcmessagebox.cpp
+    kcmessagebox.cpp \
+    kcgraphicbuttonuninstall.cpp \
+    kcgraphicuninstallbuttonbase.cpp \
+    kcgraphicbuttonrepair.cpp
 
 HEADERS += \
     Controls/GraphicButtons/kcgraphicbuttonbase.h \
     Controls/GraphicButtons/kcgraphicbuttonok.h \
     Controls/GraphicButtons/kcgraphicbuttoncancel.h \
     mainwindow.h \
-    kcmessagebox.h
+    kcmessagebox.h \
+    kcgraphicbuttonuninstall.h \
+    kcgraphicuninstallbuttonbase.h \
+    kcgraphicbuttonrepair.h
 
 RESOURCES += \
     rc.qrc

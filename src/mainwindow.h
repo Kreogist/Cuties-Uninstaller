@@ -33,9 +33,13 @@
 #include <QTimeLine>
 
 #include <QMainWindow>
+#include <QProgressBar>
 #include <QDialog>
 
 #include "kcmessagebox.h"
+
+#include "kcgraphicbuttonrepair.h"
+#include "kcgraphicbuttonuninstall.h"
 
 class ContextWindow : public QDialog
 {
@@ -48,15 +52,19 @@ private slots:
     void onActionCancel();
     void onActionRepair();
     void onActionUninstall();
+    void onActionHideButtons();
 
 private:
     QWidget *layoutWidget;
     QVBoxLayout *mainLayout;
     QHBoxLayout *buttonsLayout;
+    QHBoxLayout *centerCancelButtonLayout;
 
-    QPushButton *repair;
-    QPushButton *uninstall;
-    QPushButton *cancel;
+    KCGraphicButtonRepair *repair;
+    KCGraphicButtonUninstall *uninstall;
+    KCGraphicButtonCancel *cancel;
+    QLabel *progressingCaption;
+    QProgressBar *progressing;
 };
 
 class MainWindow : public QMainWindow

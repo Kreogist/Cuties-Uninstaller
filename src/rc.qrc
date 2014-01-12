@@ -10,6 +10,8 @@
         <file>image/Buttons/ok_normal.png</file>
         <file>image/Buttons/cancel_hover.png</file>
         <file>image/Buttons/cancel_normal.png</file>
+        <file>image/Buttons/bin.png</file>
+        <file>image/Buttons/tools.png</file>
     </qresource>
     <qresource prefix="/sounds">
         <file>sounds/alert.wav</file>
