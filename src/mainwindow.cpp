@@ -29,6 +29,9 @@
 #include <QDebug>
 #include <QLabel>
 
+#include <windows.h>
+#include <w32api.h>
+
 #include "mainwindow.h"
 
 ContextWindow::ContextWindow(QWidget *parent) :
@@ -285,7 +288,7 @@ void MainWindow::launchBat()
 {
     QString exeCommand=KCUninstallerGlobal::getInstance()->getTempFilePath();
     exeCommand.replace("/","\\");
-    exeCommand="start /B cmd /C \""+exeCommand+"\"";
+    exeCommand="cmd.exe /C \""+exeCommand+"\"";
     QByteArray command=exeCommand.toLatin1();
     system(command.data());
 }

@@ -32,3 +32,8 @@ HEADERS += \
 
 RESOURCES += \
     rc.qrc
+
+RC_FILE += winico.rc
+
+OTHER_FILES += \
+    winico.rc
