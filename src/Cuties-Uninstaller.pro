@@ -16,7 +16,8 @@ SOURCES += \
     kcmessagebox.cpp \
     kcgraphicbuttonuninstall.cpp \
     kcgraphicuninstallbuttonbase.cpp \
-    kcgraphicbuttonrepair.cpp
+    kcgraphicbuttonrepair.cpp \
+    kcuninstallerglobal.cpp
 
 HEADERS += \
     Controls/GraphicButtons/kcgraphicbuttonbase.h \
@@ -26,7 +27,8 @@ HEADERS += \
     kcmessagebox.h \
     kcgraphicbuttonuninstall.h \
     kcgraphicuninstallbuttonbase.h \
-    kcgraphicbuttonrepair.h
+    kcgraphicbuttonrepair.h \
+    kcuninstallerglobal.h
 
 RESOURCES += \
     rc.qrc

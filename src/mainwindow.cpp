@@ -23,6 +23,9 @@
  *
  */
 
+#include <QMessageBox>
+
+#include <QApplication>
 #include <QDebug>
 #include <QLabel>
 
@@ -87,6 +90,10 @@ ContextWindow::ContextWindow(QWidget *parent) :
     progressing->hide();
     progressingCaption=new QLabel(this);
     progressingCaption->hide();
+    progressingFile=new QLabel(this);
+    progressingFile->hide();
+
+    instance=KCUninstallerGlobal::getInstance();
 }
 
 ContextWindow::~ContextWindow()
@@ -128,9 +135,10 @@ void ContextWindow::onActionUninstall()
     if(confirmUninstall->messageBoxState()==KCMessageBoxPanel::buttonOK)
     {
         onActionHideButtons();
-        KCMessageBox *uninstallProgress=new KCMessageBox(this);
+        uninstallProgress=new KCMessageBox(this);
         uninstallProgress->setTitle("Uninstall");
         uninstallProgress->addWidget(progressingCaption);
+        uninstallProgress->addWidget(progressingFile);
         uninstallProgress->addWidget(progressing);
         uninstallProgress->disabledOK();
         uninstallProgress->setEscEnabled(false);
@@ -138,6 +146,7 @@ void ContextWindow::onActionUninstall()
         uninstallProgress->show();
         progressingCaption->show();
         progressing->show();
+        processUninstall();
     }
 }
 
@@ -148,8 +157,59 @@ void ContextWindow::onActionHideButtons()
     cancel->visibleDisabled();
 }
 
+void ContextWindow::processUninstall()
+{
+    progressingCaption->setText("Preparing Uninstall");
+    progressing->setMaximum(instance->prepareUninstall(QApplication::applicationDirPath()));
+    int progressValue=0;
+    QStringList processList=instance->getFolderLists();
+    int processNum=processList.count();
+    for(int i=0; i<processNum; i++)
+    {
+        progressValue++;
+        progressing->setValue(progressValue);
+        progressingFile->setText(processList.at(i));
+        instance->removeDirectory(processList.at(i));
+    }
+    processList=instance->getFileLists();
+    processNum=processList.count();
+    QString currentFile, waitToDeleteCommand,
+            meFile=QApplication::applicationFilePath().toLower();
+    for(int i=0; i<processNum; i++)
+    {
+        progressValue++;
+        progressing->setValue(progressValue);
+        currentFile=processList.at(i).toLower();
+        if(currentFile.right(4)!=".dll" &&
+                currentFile!=meFile)
+        {
+            progressingFile->setText(processList.at(i));
+            instance->removeFile(currentFile);
+        }
+        else
+        {
+            waitToDeleteCommand=processList.at(i);
+            waitToDeleteCommand.replace("/","\\");
+            waitToDeleteCommand="del /F /S /Q " + waitToDeleteCommand + "\n";
+            /*
+             * Delete myself need to try sometimes.
+             */
+            instance->flushCommand(waitToDeleteCommand);
+            instance->flushCommand(waitToDeleteCommand);
+            instance->flushCommand(waitToDeleteCommand);
+        }
+    }
+    instance->flushToBat();
+    progressingCaption->setText("Finish");
+    uninstallProgress->enabledOK();
+
+    connect(uninstallProgress, SIGNAL(finished(int)),
+            this, SIGNAL(requireUninstall()));
+}
+
 void ContextWindow::onActionCancel()
 {
+    emit requireExit();
     close();
 }
 
@@ -174,8 +234,10 @@ MainWindow::MainWindow(QWidget *parent) :
 
     mainContext=new ContextWindow(this);
     setCentralWidget(mainContext);
-    connect(mainContext, SIGNAL(finished(int)),
+    connect(mainContext, SIGNAL(requireExit()),
             this, SLOT(animateClose()));
+    connect(mainContext, SIGNAL(requireUninstall()),
+            this, SLOT(animateDestory()));
 }
 
 void MainWindow::animateShow()
@@ -187,6 +249,14 @@ void MainWindow::animateClose()
 {
     connect(fadeAnimation, SIGNAL(finished()),
             this, SLOT(close()));
+    backgroundAlphaInterval*=-1.0;
+    fadeAnimation->start();
+}
+
+void MainWindow::animateDestory()
+{
+    connect(fadeAnimation, SIGNAL(finished()),
+            this, SLOT(launchBat()));
     backgroundAlphaInterval*=-1.0;
     fadeAnimation->start();
 }
@@ -204,4 +274,18 @@ void MainWindow::updateBackgroundAlpha()
 {
     backgroundAlpha+=backgroundAlphaInterval;
     setWindowOpacity(backgroundAlpha);
+}
+
+void MainWindow::enabledUninstallMode()
+{
+    uninstallMode=true;
+}
+
+void MainWindow::launchBat()
+{
+    QString exeCommand=KCUninstallerGlobal::getInstance()->getTempFilePath();
+    exeCommand.replace("/","\\");
+    exeCommand="start /B cmd /C \""+exeCommand+"\"";
+    QByteArray command=exeCommand.toLatin1();
+    system(command.data());
 }

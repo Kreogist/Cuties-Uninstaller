@@ -36,10 +36,14 @@
 #include <QProgressBar>
 #include <QDialog>
 
+#include <cstdlib>
+
 #include "kcmessagebox.h"
 
 #include "kcgraphicbuttonrepair.h"
 #include "kcgraphicbuttonuninstall.h"
+
+#include "kcuninstallerglobal.h"
 
 class ContextWindow : public QDialog
 {
@@ -48,6 +52,10 @@ public:
     explicit ContextWindow(QWidget *parent = 0);
     ~ContextWindow();
 
+signals:
+    void requireUninstall();
+    void requireExit();
+
 private slots:
     void onActionCancel();
     void onActionRepair();
@@ -55,6 +63,7 @@ private slots:
     void onActionHideButtons();
 
 private:
+    void processUninstall();
     QWidget *layoutWidget;
     QVBoxLayout *mainLayout;
     QHBoxLayout *buttonsLayout;
@@ -64,7 +73,11 @@ private:
     KCGraphicButtonUninstall *uninstall;
     KCGraphicButtonCancel *cancel;
     QLabel *progressingCaption;
+    QLabel *progressingFile;
     QProgressBar *progressing;
+
+    KCUninstallerGlobal *instance;
+    KCMessageBox *uninstallProgress;
 };
 
 class MainWindow : public QMainWindow
@@ -78,12 +91,15 @@ signals:
 public slots:
     void animateShow();
     void animateClose();
+    void animateDestory();
 
 protected:
     void showEvent(QShowEvent *event);
 
 private slots:
     void updateBackgroundAlpha();
+    void enabledUninstallMode();
+    void launchBat();
 
 private:
     qreal backgroundAlpha=0.0;
@@ -91,6 +107,7 @@ private:
 
     ContextWindow *mainContext;
     QTimeLine *fadeAnimation;
+    bool uninstallMode=false;
 };
 
 #endif // MAINWINDOW_H
