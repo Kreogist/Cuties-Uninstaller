@@ -97,17 +97,16 @@ protected:
     void showEvent(QShowEvent *event);
 
 private slots:
-    void updateBackgroundAlpha();
+    void updateBackgroundAlpha(qreal percent);
     void enabledUninstallMode();
     void launchBat();
 
 private:
-    qreal backgroundAlpha=0.0;
-    qreal backgroundAlphaInterval=0.05;
-
     ContextWindow *mainContext;
     QTimeLine *fadeAnimation;
     bool uninstallMode=false;
+    bool reverse=false;
+    qreal maxOpacity;
 };
 
 #endif // MAINWINDOW_H

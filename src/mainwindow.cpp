@@ -220,7 +220,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent)
 {
     //Set Main Window Properties.
-    setWindowOpacity(backgroundAlpha);
+    setWindowOpacity(0);
     setWindowState(Qt::WindowFullScreen);
 
     //Set Main Window Palette.
@@ -230,10 +230,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
     fadeAnimation=new QTimeLine(200, this);
     fadeAnimation->setUpdateInterval(5);
-    fadeAnimation->setStartFrame(0);
-    fadeAnimation->setEndFrame(16);
-    connect(fadeAnimation, SIGNAL(frameChanged(int)),
-            this, SLOT(updateBackgroundAlpha()));
+    fadeAnimation->setFrameRange(0,9);
+    connect(fadeAnimation, SIGNAL(valueChanged(qreal)),
+            this, SLOT(updateBackgroundAlpha(qreal)));
 
     mainContext=new ContextWindow(this);
     setCentralWidget(mainContext);
@@ -252,7 +251,7 @@ void MainWindow::animateClose()
 {
     connect(fadeAnimation, SIGNAL(finished()),
             this, SLOT(close()));
-    backgroundAlphaInterval*=-1.0;
+    reverse=true;
     fadeAnimation->start();
 }
 
@@ -260,7 +259,7 @@ void MainWindow::animateDestory()
 {
     connect(fadeAnimation, SIGNAL(finished()),
             this, SLOT(launchBat()));
-    backgroundAlphaInterval*=-1.0;
+    reverse=true;
     fadeAnimation->start();
 }
 
@@ -273,10 +272,18 @@ void MainWindow::showEvent(QShowEvent *event)
     mainContext->show();
 }
 
-void MainWindow::updateBackgroundAlpha()
+void MainWindow::updateBackgroundAlpha(qreal percent)
 {
-    backgroundAlpha+=backgroundAlphaInterval;
-    setWindowOpacity(backgroundAlpha);
+    qreal currentOpacity=percent/4*3;
+    if(reverse)
+    {
+        currentOpacity=maxOpacity-currentOpacity;
+    }
+    else
+    {
+        maxOpacity=currentOpacity;
+    }
+    setWindowOpacity(currentOpacity);
 }
 
 void MainWindow::enabledUninstallMode()
