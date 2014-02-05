@@ -16,4 +16,7 @@
     <qresource prefix="/sounds">
         <file>sounds/alert.wav</file>
     </qresource>
+    <qresource prefix="/font">
+        <file>font/sao.ttf</file>
+    </qresource>
 </RCC>

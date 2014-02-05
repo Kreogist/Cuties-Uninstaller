@@ -25,6 +25,9 @@
 
 #include <QApplication>
 #include <QStyleFactory>
+#include <QFile>
+#include <QFontDatabase>
+
 #include <QDebug>
 
 #include "mainwindow.h"
@@ -32,14 +35,19 @@
 void initApplicationProperties()
 {
     QApplication::setApplicationName("Cuties Uninstaller");
-    QApplication::setApplicationVersion("0.0.1");
+    QApplication::setApplicationVersion("0.0.3");
 }
 
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
-
     app.setStyle(QStyleFactory::create("fusion"));
+
+    QFile saoFontResource(":/font/font/sao.ttf");
+    if(saoFontResource.open(QIODevice::ReadOnly))
+    {
+        QFontDatabase::addApplicationFontFromData(saoFontResource.readAll());
+    }
 
     MainWindow mainWindow;
     mainWindow.show();
